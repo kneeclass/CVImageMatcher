@@ -34,6 +34,7 @@ namespace CVImageMatcher.Core
                 //set new startIndex
                 startIndex += descriptor.Rows;
             }
+            
             IndexContext.CurrentMappingIndex = indexMappning;
             var indexParams = new KDTreeIndexParams(4);
             IndexContext.ConcatDescriptors = DescriptorManager.ConcatDescriptors(descriptors);
