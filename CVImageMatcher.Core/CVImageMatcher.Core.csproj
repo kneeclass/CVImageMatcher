@@ -76,6 +76,9 @@
     <Compile Include="Extensions\MatExtensions.cs" />
     <Compile Include="IndexContext.cs" />
     <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\ImagePointContext.cs" />
+    <Compile Include="Models\MatchResult.cs" />
+    <Compile Include="Models\QueryHit.cs" />
     <Compile Include="Repositorys\IImageRespository.cs" />
     <Compile Include="Repositorys\LocalImagesRepository.cs" />
     <Compile Include="IndexBuilder.cs" />

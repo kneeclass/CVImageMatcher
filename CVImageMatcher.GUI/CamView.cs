@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using CVImageMatcher.Core;
+using CVImageMatcher.Core.Models;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 
@@ -32,36 +33,47 @@ namespace CVImageMatcher.GUI {
 
                 var success = cam.Grab(); ;
                 if (!success) throw new Exception("Failed to grab image");
-                Mat frame = null;
+                Mat frame = new Mat();
                 cam.Retrieve(frame);
-                CvInvoke.CvtColor(frame, frame, ColorConversion.BayerGr2Gray);
-
-                var bitmap = frame.Bitmap;
-                Invoke((MethodInvoker)delegate {
-                    listBox1.Items.Clear();
-                    camImage.BackgroundImage = bitmap;
-                    camImage.Size = bitmap.Size;
-                });
-                Dictionary<CVImageMatcher.Core.Models.Image, int> matches = null;
-                TimeSpan elapsed = TimeSpan.Zero;
-
+                MatchResult matches;
+                TimeSpan elapsed;
                 if (FindMatched(frame, out matches, out elapsed)) {
-                    Invoke((MethodInvoker)delegate {
-                        foreach (var keyValuePair in matches) {
-                            this.listBox1.Items.Add(keyValuePair.Key.LocalPath + " " + keyValuePair.Value);
+
+                    Invoke((MethodInvoker) delegate {
+                        listBox1.Items.Clear();
+                        foreach (var keyValuePair in matches.Matches) {
+                            
+                            listBox1.Items.Add(keyValuePair.Key.LocalPath + " " + keyValuePair.Value.Hits);
                         }
                     });
                 }
+                else {
+                    Invoke((MethodInvoker) delegate {
+                        listBox1.Items.Clear();
+                    });
+                }
 
-                Thread.Sleep(200);
+                //CvInvoke.CvtColor(frame, frame, ColorConversion.BayerGr2Gray);
+
+                var bitmap = frame.Bitmap;
+                Invoke((MethodInvoker) delegate {
+                    
+                    camImage.BackgroundImage = bitmap;
+                    camImage.Size = bitmap.Size;
+                });
+                    
+
+                    
+                
+                Thread.Sleep(100);
             }
             
 
 
         }
 
-        
-        private bool FindMatched(Mat image, out Dictionary<CVImageMatcher.Core.Models.Image, int> matches, out TimeSpan took) {
+
+        private bool FindMatched(Mat image, out MatchResult matches, out TimeSpan took) {
             var stopwatch = Stopwatch.StartNew();
             matches = null;
 
@@ -69,7 +81,7 @@ namespace CVImageMatcher.GUI {
             var result = matcher.FindMatch(image);
             took = stopwatch.Elapsed;
 
-            if (result != null && result.Any()) {
+            if (result != null && result.Matches.Any()) {
                 matches = result;
                 return true;
             }

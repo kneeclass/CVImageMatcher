@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CVImageMatcher.Core.Models;
 using CVImageMatcher.Core.Repositorys;
 using Emgu.CV;
 using Emgu.CV.Flann;
+using Emgu.CV.Util;
 
 namespace CVImageMatcher.Core
 {
@@ -35,9 +37,10 @@ namespace CVImageMatcher.Core
                 startIndex += descriptor.Rows;
             }
             IndexContext.CurrentMappingIndex = indexMappning;
-            var indexParams = new LshIndexParamses(20,15,2);
+            var indexParams =  new LshIndexParamses(10,10,0);
             IndexContext.ConcatDescriptors = DescriptorManager.ConcatDescriptors(descriptors);
-            IndexContext.CurrentFlannIndex = new Index(IndexContext.ConcatDescriptors,indexParams) ;
+            IndexContext.CurrentFlannIndex = new Index(IndexContext.ConcatDescriptors, indexParams);
+            
         }
 
     }
