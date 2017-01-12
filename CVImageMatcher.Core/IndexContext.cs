@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using CVImageMatcher.Core.Models;
-using OpenCvSharp;
-using OpenCvSharp.Flann;
+using Emgu.CV.Flann;
+using Emgu.CV;
 
 namespace CVImageMatcher.Core {
     public class IndexContext {
